@@ -1,6 +1,7 @@
+
 package com.mycompany.sistemsewalapangan;
 
-public class Lapangan {
+public abstract class Lapangan {
 
     private String namaPenyewa;
     private String tanggal;
@@ -12,16 +13,17 @@ public class Lapangan {
         this.namaPenyewa = namaPenyewa;
         this.tanggal = tanggal;
         this.durasi = durasi;
-
         jumlahSewa++;
     }
+
+    public abstract void tampilkanFasilitas();
 
     public String getNamaPenyewa() {
         return namaPenyewa;
     }
 
     public void setNamaPenyewa(String namaPenyewa) {
-        if (!namaPenyewa.isEmpty()) {
+        if (namaPenyewa != null && !namaPenyewa.isEmpty()) {
             this.namaPenyewa = namaPenyewa;
         }
     }
@@ -31,7 +33,9 @@ public class Lapangan {
     }
 
     public void setTanggal(String tanggal) {
-        this.tanggal = tanggal;
+        if (tanggal != null && !tanggal.isEmpty()) {
+            this.tanggal = tanggal;
+        }
     }
 
     public int getDurasi() {
@@ -49,8 +53,7 @@ public class Lapangan {
     }
 
     public int hitungHarga(int hargaPerJam, int diskon) {
-        int total = durasi * hargaPerJam;
-        return total - diskon;
+        return (durasi * hargaPerJam) - diskon;
     }
 
     public void tampilkanInfo() {
