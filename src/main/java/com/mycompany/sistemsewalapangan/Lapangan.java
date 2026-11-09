@@ -16,16 +16,12 @@ public abstract class Lapangan {
         jumlahSewa++;
     }
 
-    public abstract void tampilkanFasilitas();
-
     public String getNamaPenyewa() {
         return namaPenyewa;
     }
 
     public void setNamaPenyewa(String namaPenyewa) {
-        if (namaPenyewa != null && !namaPenyewa.isEmpty()) {
-            this.namaPenyewa = namaPenyewa;
-        }
+        this.namaPenyewa = namaPenyewa;
     }
 
     public String getTanggal() {
@@ -33,9 +29,7 @@ public abstract class Lapangan {
     }
 
     public void setTanggal(String tanggal) {
-        if (tanggal != null && !tanggal.isEmpty()) {
-            this.tanggal = tanggal;
-        }
+        this.tanggal = tanggal;
     }
 
     public int getDurasi() {
@@ -43,9 +37,19 @@ public abstract class Lapangan {
     }
 
     public void setDurasi(int durasi) {
-        if (durasi > 0) {
-            this.durasi = durasi;
-        }
+        this.durasi = durasi;
+    }
+
+    public static int getJumlahSewa() {
+        return jumlahSewa;
+    }
+
+    public abstract void tampilkanFasilitas();
+
+    public void tampilkanInfo() {
+        System.out.println("Nama Penyewa : " + namaPenyewa);
+        System.out.println("Tanggal      : " + tanggal);
+        System.out.println("Durasi       : " + durasi + " jam");
     }
 
     public int hitungHarga(int hargaPerJam) {
@@ -54,15 +58,5 @@ public abstract class Lapangan {
 
     public int hitungHarga(int hargaPerJam, int diskon) {
         return (durasi * hargaPerJam) - diskon;
-    }
-
-    public void tampilkanInfo() {
-        System.out.println("Penyewa : " + namaPenyewa);
-        System.out.println("Tanggal : " + tanggal);
-        System.out.println("Durasi  : " + durasi + " jam");
-    }
-
-    public static int getJumlahSewa() {
-        return jumlahSewa;
     }
 }
