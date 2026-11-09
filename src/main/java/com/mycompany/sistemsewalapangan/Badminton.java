@@ -1,13 +1,12 @@
-
 package com.mycompany.sistemsewalapangan;
 
-public class Badminton extends Lapangan
-        implements DapatDiPesan {
+public class Badminton extends Lapangan implements DapatDiPesan {
 
     private String jenisLapangan;
 
     public Badminton(String namaPenyewa, String tanggal,
                      int durasi, String jenisLapangan) {
+
         super(namaPenyewa, tanggal, durasi);
         this.jenisLapangan = jenisLapangan;
     }
@@ -16,17 +15,9 @@ public class Badminton extends Lapangan
         return jenisLapangan;
     }
 
-    public void setJenisLapangan(String jenisLapangan) {
-        if (jenisLapangan != null && !jenisLapangan.isEmpty()) {
-            this.jenisLapangan = jenisLapangan;
-        }
-    }
-
     @Override
     public void tampilkanFasilitas() {
-        System.out.println(
-                "Fasilitas Badminton: net dan shuttlecock."
-        );
+        System.out.println("Fasilitas Badminton: net dan shuttlecock.");
     }
 
     @Override
@@ -43,9 +34,6 @@ public class Badminton extends Lapangan
 
     @Override
     public void prosesPemesanan() {
-        System.out.println(
-                "Pemesanan Badminton diproses untuk "
-                + getNamaPenyewa()
-        );
+        System.out.println("Pemesanan Badminton berhasil diproses.");
     }
 }
