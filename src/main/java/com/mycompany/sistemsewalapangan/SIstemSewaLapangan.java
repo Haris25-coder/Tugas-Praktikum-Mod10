@@ -1,76 +1,78 @@
 
 package com.mycompany.sistemsewalapangan;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class SIstemSewaLapangan {
 
-    static ArrayList<Lapangan> daftarSewa = new ArrayList<>();
+    static Scanner input = new Scanner(System.in);
 
-    static HashMap<String, String> daftarPelanggan = new HashMap<>();
+    static ManajemenSewaLapangan sistem =
+            new ManajemenSewaLapangan();
 
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
         int pilihan = 0;
 
         do {
-            System.out.println("\n==================================");
+            System.out.println("\n================================");
             System.out.println("       SISTEM SEWA LAPANGAN");
-            System.out.println("==================================");
+            System.out.println("================================");
             System.out.println("1. Tambah Penyewaan");
-            System.out.println("2. Tampilkan Semua Penyewaan");
-            System.out.println("3. Abstract Method & Interface");
-            System.out.println("4. Tambah Data Pelanggan");
-            System.out.println("5. Cari Data Pelanggan");
-            System.out.println("6. Tampilkan Semua Pelanggan");
-            System.out.println("7. Cari Data Penyewaan");
-            System.out.println("8. Keluar");
-            System.out.println("==================================");
+            System.out.println("2. Tampilkan Semua Lapangan");
+            System.out.println("3. Tambah Pelanggan");
+            System.out.println("4. Tampilkan Semua Pelanggan");
+            System.out.println("5. Cari Pelanggan");
+            System.out.println("6. Tampilkan Fasilitas");
+            System.out.println("7. Jalankan Transaksi");
+            System.out.println("8. Tampilkan Fasilitas Lapangan");
+            System.out.println("9. Keluar");
+            System.out.println("================================");
             System.out.print("Pilih menu: ");
 
             try {
+
                 pilihan = input.nextInt();
                 input.nextLine();
 
                 switch (pilihan) {
 
                     case 1:
-                        tambahPenyewaan(input);
+                        tambahPenyewaan();
                         break;
 
                     case 2:
-                        tampilkanPenyewaan();
+                        sistem.tampilkanLapangan();
                         break;
 
                     case 3:
-                        jalankanInterface();
+                        tambahPelanggan();
                         break;
 
                     case 4:
-                        tambahPelanggan(input);
+                        sistem.tampilkanPelanggan();
                         break;
 
                     case 5:
-                        cariPelanggan(input);
+                        cariPelanggan();
                         break;
 
                     case 6:
-                        tampilkanPelanggan();
+                        sistem.tampilkanFasilitas();
                         break;
 
                     case 7:
-                        cariPenyewaan(input);
+                        jalankanTransaksi();
                         break;
 
                     case 8:
+                        sistem.tampilkanSemuaFasilitas();
+                        break;
+
+                    case 9:
                         System.out.println(
-                                "Terima kasih telah menggunakan program."
-                        );
+                                "Terima kasih telah menggunakan program.");
                         break;
 
                     default:
@@ -80,40 +82,28 @@ public class SIstemSewaLapangan {
             } catch (InputMismatchException e) {
 
                 System.out.println(
-                        "ERROR: Input harus berupa angka!"
-                );
+                        "ERROR: Input harus berupa angka!");
 
                 input.nextLine();
 
+                pilihan = 0;
+
             } catch (DataPenyewaanException e) {
 
-                System.out.println(
-                        "ERROR: " + e.getMessage()
-                );
+                System.out.println("ERROR: " + e.getMessage());
 
             } finally {
 
                 System.out.println(
-                        "[FINALLY] Proses menu telah diperiksa."
-                );
+                        "[FINALLY] Proses menu telah diperiksa.");
             }
 
-        } while (pilihan != 8);
+        } while (pilihan != 9);
 
         input.close();
     }
 
-    public static void validasiData(String data, String keterangan)
-            throws DataPenyewaanException {
-
-        if (data == null || data.trim().isEmpty()) {
-            throw new DataPenyewaanException(
-                    keterangan + " tidak boleh kosong!"
-            );
-        }
-    }
-
-    public static void tambahPenyewaan(Scanner input)
+    public static void tambahPenyewaan()
             throws DataPenyewaanException {
 
         System.out.println("\n=== TAMBAH PENYEWAAN ===");
@@ -121,21 +111,20 @@ public class SIstemSewaLapangan {
         System.out.print("Nama penyewa: ");
         String nama = input.nextLine();
 
-        validasiData(nama, "Nama penyewa");
+        validasi(nama, "Nama penyewa");
 
         System.out.print("Tanggal sewa: ");
         String tanggal = input.nextLine();
 
-        validasiData(tanggal, "Tanggal sewa");
+        validasi(tanggal, "Tanggal sewa");
 
-        System.out.print("Durasi sewa (jam): ");
+        System.out.print("Durasi (jam): ");
         int durasi = input.nextInt();
         input.nextLine();
 
         if (durasi <= 0) {
             throw new DataPenyewaanException(
-                    "Durasi harus lebih dari 0!"
-            );
+                    "Durasi harus lebih dari 0!");
         }
 
         System.out.println("1. Futsal");
@@ -145,210 +134,112 @@ public class SIstemSewaLapangan {
         int jenis = input.nextInt();
         input.nextLine();
 
+        Lapangan lapangan;
+
         if (jenis == 1) {
 
             System.out.print("Ukuran lapangan: ");
             String ukuran = input.nextLine();
 
-            validasiData(ukuran, "Ukuran lapangan");
+            validasi(ukuran, "Ukuran lapangan");
 
-            daftarSewa.add(
-                    new Futsal(nama, tanggal, durasi, ukuran)
-            );
+            lapangan = new Futsal(
+                    nama, tanggal, durasi, ukuran);
 
         } else if (jenis == 2) {
 
             System.out.print("Tipe lapangan: ");
             String tipe = input.nextLine();
 
-            validasiData(tipe, "Tipe lapangan");
+            validasi(tipe, "Tipe lapangan");
 
-            daftarSewa.add(
-                    new Badminton(nama, tanggal, durasi, tipe)
-            );
+            lapangan = new Badminton(
+                    nama, tanggal, durasi, tipe);
 
         } else {
 
             throw new DataPenyewaanException(
-                    "Jenis lapangan tidak tersedia!"
-            );
+                    "Jenis lapangan tidak tersedia!");
         }
 
-        System.out.println("Data penyewaan berhasil ditambahkan!");
-        System.out.println(
-                "Jumlah data: " + daftarSewa.size()
-        );
+        sistem.tambahLapangan(lapangan);
+
+        System.out.println("Jumlah lapangan: "
+                + sistem.jumlahLapangan());
     }
 
-    public static void tampilkanPenyewaan() {
-
-        System.out.println("\n=== DAFTAR PENYEWAAN ===");
-
-        if (daftarSewa.isEmpty()) {
-            System.out.println("Belum ada data penyewaan!");
-            return;
-        }
-
-        for (int i = 0; i < daftarSewa.size(); i++) {
-
-            System.out.println("\nData ke-" + (i + 1));
-            System.out.println("----------------------");
-
-            daftarSewa.get(i).tampilkanInfo();
-        }
-
-        System.out.println(
-                "\nTotal penyewaan: " + daftarSewa.size()
-        );
-    }
-
-    public static void jalankanInterface() {
-
-        System.out.println("\n=== ABSTRACT METHOD & INTERFACE ===");
-
-        if (daftarSewa.isEmpty()) {
-            System.out.println("Belum ada data penyewaan!");
-            return;
-        }
-
-        for (int i = 0; i < daftarSewa.size(); i++) {
-
-            Lapangan lapangan = daftarSewa.get(i);
-
-            System.out.println(
-                    "\nPenyewa: " + lapangan.getNamaPenyewa()
-            );
-
-            lapangan.tampilkanFasilitas();
-
-            if (lapangan instanceof DapatDiPesan) {
-
-                DapatDiPesan pesanan =
-                        (DapatDiPesan) lapangan;
-
-                pesanan.prosesPemesanan();
-            }
-
-            if (lapangan instanceof DapatDiberiDiskon) {
-
-                DapatDiberiDiskon diskon =
-                        (DapatDiberiDiskon) lapangan;
-
-                diskon.tampilkanDiskon();
-            }
-        }
-    }
-
-    public static void tambahPelanggan(Scanner input)
+    public static void tambahPelanggan()
             throws DataPenyewaanException {
 
         System.out.println("\n=== TAMBAH PELANGGAN ===");
 
-        System.out.print("Masukkan ID pelanggan: ");
+        System.out.print("ID pelanggan: ");
         String id = input.nextLine();
 
-        validasiData(id, "ID pelanggan");
+        validasi(id, "ID pelanggan");
 
-        if (daftarPelanggan.containsKey(id)) {
-            throw new DataPenyewaanException(
-                    "ID pelanggan sudah terdaftar!"
-            );
-        }
-
-        System.out.print("Masukkan nama pelanggan: ");
+        System.out.print("Nama pelanggan: ");
         String nama = input.nextLine();
 
-        validasiData(nama, "Nama pelanggan");
+        validasi(nama, "Nama pelanggan");
 
-        daftarPelanggan.put(id, nama);
+        System.out.print("Nomor telepon: ");
+        String telepon = input.nextLine();
 
-        System.out.println("Pelanggan berhasil ditambahkan!");
-        System.out.println(
-                "Jumlah pelanggan: " + daftarPelanggan.size()
-        );
+        validasi(telepon, "Nomor telepon");
+
+        Pelanggan pelanggan = new Pelanggan(
+                id, nama, telepon);
+
+        sistem.tambahPelanggan(pelanggan);
+
+        System.out.println("Jumlah pelanggan: "
+                + sistem.jumlahPelanggan());
     }
 
-    public static void cariPelanggan(Scanner input)
+    public static void cariPelanggan()
             throws DataPenyewaanException {
 
         System.out.println("\n=== CARI PELANGGAN ===");
 
-        System.out.print("Masukkan ID pelanggan: ");
+        System.out.print("Masukkan ID: ");
         String id = input.nextLine();
 
-        validasiData(id, "ID pelanggan");
+        validasi(id, "ID pelanggan");
 
-        if (daftarPelanggan.containsKey(id)) {
+        Pelanggan pelanggan = sistem.cariPelanggan(id);
 
-            System.out.println(
-                    "ID pelanggan: " + id
-            );
-
-            System.out.println(
-                    "Nama pelanggan: "
-                    + daftarPelanggan.get(id)
-            );
-
-        } else {
-
-            throw new DataPenyewaanException(
-                    "Pelanggan dengan ID " + id
-                    + " tidak ditemukan!"
-            );
-        }
+        System.out.println("\nData ditemukan:");
+        pelanggan.tampilkanInfo();
     }
 
-    public static void tampilkanPelanggan() {
-
-        System.out.println("\n=== DAFTAR PELANGGAN ===");
-
-        if (daftarPelanggan.isEmpty()) {
-            System.out.println("Belum ada pelanggan!");
-            return;
-        }
-
-        for (Map.Entry<String, String> data
-                : daftarPelanggan.entrySet()) {
-
-            System.out.println(
-                    "ID: " + data.getKey()
-                    + " | Nama: " + data.getValue()
-            );
-        }
-
-        System.out.println(
-                "Total pelanggan: " + daftarPelanggan.size()
-        );
-    }
-
-    public static void cariPenyewaan(Scanner input)
+    public static void jalankanTransaksi()
             throws DataPenyewaanException {
 
-        System.out.println("\n=== CARI PENYEWAAN ===");
+        System.out.println("\n=== PROSES TRANSAKSI ===");
 
-        System.out.print("Masukkan nama penyewa: ");
-        String nama = input.nextLine();
+        sistem.tampilkanPelanggan();
 
-        validasiData(nama, "Nama penyewa");
+        System.out.print("\nMasukkan ID pelanggan: ");
+        String id = input.nextLine();
 
-        boolean ditemukan = false;
+        validasi(id, "ID pelanggan");
 
-        for (int i = 0; i < daftarSewa.size(); i++) {
+        sistem.tampilkanLapangan();
 
-            Lapangan lapangan = daftarSewa.get(i);
+        System.out.print("\nPilih nomor lapangan: ");
+        int nomor = input.nextInt();
+        input.nextLine();
 
-            if (lapangan.getNamaPenyewa()
-                    .equalsIgnoreCase(nama)) {
+        sistem.jalankanTransaksi(id, nomor);
+    }
 
-                lapangan.tampilkanInfo();
-                ditemukan = true;
-            }
-        }
+    public static void validasi(String data, String keterangan)
+            throws DataPenyewaanException {
 
-        if (!ditemukan) {
+        if (data == null || data.trim().isEmpty()) {
             throw new DataPenyewaanException(
-                    "Data penyewaan tidak ditemukan!"
-            );
+                    keterangan + " tidak boleh kosong!");
         }
     }
 }
